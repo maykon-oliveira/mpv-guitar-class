@@ -1,33 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useEffect, useState } from 'react'
+import { NoteType } from './domain/note-type'
+import { Interval, IntervalType, increaseInterval } from './domain/interval'
+
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [currentNote, setCurrentNote] = useState(NoteType.C);
+  const [interval, newInterval] = useState<Interval>('1T');
+
+  const sortNote = () => Object.values(NoteType).sort(() => 0.5 - Math.random())[0];
+  const sortInterval = () => Object.values(IntervalType).sort(() => 0.5 - Math.random())[0];
+
+  const refresh = () => {
+    setCurrentNote(sortNote());
+    newInterval(sortInterval());
+  }
+
+  const handleAnswer = (note: NoteType) => {
+    const result = increaseInterval(currentNote, interval)
+
+    if (result === note) {
+      alert("Acertou");
+    } else {
+      alert(`Errou, a respota seria ${result}.`);
+    }
+
+    refresh()
+  }
+
+  useEffect(() => {
+    refresh();
+  }, []);
+
+  const formatInterval = (inter: Interval) => `${inter}`.replace('T', ' Tom').replace('H', ' e Meio');
 
   return (
     <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
+      <h1>Exercício de Escalas</h1>
       <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+        <button onClick={refresh}>
+          Atualizar
         </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
+        <h3>{currentNote} + {formatInterval(interval)}</h3>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <div className="parent">
+        {Object.values(NoteType).map((note, index) => <button key={index} onClick={() => handleAnswer(note)}>{note}</button>)}
+      </div>
     </div>
   )
 }

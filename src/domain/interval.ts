@@ -1,8 +1,7 @@
 import { NoteType } from "./note-type";
 
-type Numbers = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
-export type Ts = `${Numbers}T`;
-export type Interval = Ts | `${Ts}H` | 'TH';
+export const IntervalType = ["1T", "2T", "3T", "4T", "5T", "6T", "7T", "8T", "9T", "10T", "11T", "12T", "1TH", "2TH", "3TH", "4TH", "5TH", "6TH", "7TH", "8TH", "9TH", "10TH", "11TH", "12TH", "TH"];
+export type Interval = typeof IntervalType[number];
 
 export function decimalDistance(interval: Interval): number {
     const groups = interval.match(/[0-9]+/);
